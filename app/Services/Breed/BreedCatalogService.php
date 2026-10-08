@@ -88,7 +88,7 @@ class BreedCatalogService
 
         // Paginação
         $page = (int) ($filters['page'] ?? 1);
-        $perPage = (int) ($filters['per_page'] ?? 12);
+        $perPage = (int) ($filters['per_page'] ?? 10);
 
         $items = $breeds
             ->forPage($page, $perPage)

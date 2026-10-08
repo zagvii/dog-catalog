@@ -129,6 +129,88 @@
         </p>
     </section>
 
+    <p>
+        Página {{ $breeds->currentPage() }}
+        de {{ $breeds->lastPage() }}
+    </p>
+
+    <p>
+        {{ $breeds->total() }} raças encontradas
+    </p>
+
+    <form
+        method="GET"
+        action="{{ route('breeds.index') }}"
+        class="filters"
+    >
+
+        <input
+            type="text"
+            name="search"
+            placeholder="Pesquisar raça..."
+            value="{{ request('search') }}"
+        >
+
+        <select name="breed_groups">
+
+            <option value="">
+                Todos os grupos
+            </option>
+
+            <option
+                value="Toy"
+                @selected(request('breed_groups') === 'Toy')
+            >
+                Toy
+            </option>
+
+            <option
+                value="Working"
+                @selected(request('breed_groups') === 'Working')
+            >
+                Working
+            </option>
+
+            <option
+                value="Hound"
+                @selected(request('breed_groups') === 'Hound')
+            >
+                Hound
+            </option>
+
+        </select>
+
+        <input
+            type="text"
+            name="temperament"
+            placeholder="Temperamento"
+            value="{{ request('temperament') }}"
+        >
+
+        <input
+            type="number"
+            name="min_weight"
+            placeholder="Peso mín."
+            value="{{ request('min_weight') }}"
+        >
+
+        <input
+            type="number"
+            name="max_weight"
+            placeholder="Peso máx."
+            value="{{ request('max_weight') }}"
+        >
+
+        <button type="submit">
+            Filtrar
+        </button>
+
+        <a href="{{ route('breeds.index') }}">
+            Limpar
+        </a>
+
+    </form>
+
     <section class="breed-grid">
 
         @foreach ($breeds as $breed)
@@ -195,6 +277,55 @@
         @endforeach
 
     </section>
+
+    @if ($breeds->hasPages())
+
+        <nav>
+
+            {{-- Anterior --}}
+            @if ($breeds->onFirstPage())
+                <span>‹</span>
+            @else
+                <a href="{{ $breeds->previousPageUrl() }}">
+                    ‹
+                </a>
+            @endif
+
+            {{-- Páginas --}}
+            @foreach ($breeds->getUrlRange(1, $breeds->lastPage()) as $page => $url)
+
+                @if ($page == $breeds->currentPage())
+
+                    <span>
+                        {{ $page }}
+                    </span>
+
+                @else
+
+                    <a href="{{ $url }}">
+                        {{ $page }}
+                    </a>
+
+                @endif
+
+            @endforeach
+
+            {{-- Próxima --}}
+            @if ($breeds->hasMorePages())
+
+                <a href="{{ $breeds->nextPageUrl() }}">
+                    ›
+                </a>
+
+            @else
+
+                <span>›</span>
+
+            @endif
+
+        </nav>
+
+    @endif
 
 </main>
 

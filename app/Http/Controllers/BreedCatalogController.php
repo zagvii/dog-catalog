@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\Breed\BreedCatalogService;
+use App\Http\Requests\ListBreedsRequest;
 
 class BreedCatalogController extends Controller
 {
@@ -10,12 +11,14 @@ class BreedCatalogController extends Controller
         private BreedCatalogService $catalogService
     ) {}
 
-    public function index()
+    public function index(ListBreedsRequest $request)
     {
-        $breeds = $this->catalogService->getAll();
+        $filters = $request->validated();
+        $breeds = $this->catalogService->getAll($filters);
 
         return view('breeds.index', [
-            'breeds' => $breeds
+            'breeds' => $breeds,
+            'filters' => $filters
         ]);
     }
 }
